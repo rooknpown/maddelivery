@@ -18,6 +18,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -38,7 +39,7 @@ public class CallingActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calling);
-        editText = "안녕하세요, 택배입니다. 3시에 집에 계시나요?";
+        editText = getIntent().getStringExtra("talk1");
         print1 = findViewById(R.id.printview);
         tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
             @Override
@@ -46,6 +47,8 @@ public class CallingActivity extends Activity {
                 if(status != ERROR) {
                     // 언어를 선택한다.
                     tts.setLanguage(Locale.KOREAN);
+                    tts.speak(editText, TextToSpeech.QUEUE_FLUSH, null);
+                    new Waiter().execute();
                 }
             }
 
@@ -127,6 +130,14 @@ public class CallingActivity extends Activity {
 
             matches_text = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
             print1.setText(matches_text.get(0));
+            try {
+                String result = new DeepLearning1(CallingActivity.this, MainActivity.komoran, MainActivity.retMap).getAnswer(matches_text.get(0));
+                editText = result;
+                speakCheckInBackground(editText);
+            } catch(IOException e){
+            }
+
+
 
         }
         super.onActivityResult(requestCode, resultCode, data);

@@ -35,9 +35,9 @@ public class MainActivity extends Activity {
     Button startbtn;
     EditText editbtn;
     TextView txtbtn;
-    Komoran komoran;
+    public static Komoran komoran;
     String json;
-    HashMap<String, float[]>  retMap;
+    public static HashMap<String, float[]>  retMap;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +61,7 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), CallingActivity.class);
+                intent.putExtra("talk1", "안녕하세요, 택배입니다. 3시에 집에 계시나요?");
                 startActivity(intent);
             }
         });
